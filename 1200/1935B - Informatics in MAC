@@ -1,0 +1,111 @@
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Solution
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#include<bits/stdc++.h>
+using namespace std;
+void solve(){
+    int n;cin>>n;
+    int arr[n];int cnt1[n]={0};int cnt2[n]={0};
+    for(int i=0;i<n;i++){
+        cin>>arr[i];
+        cnt2[arr[i]]++;
+    }
+    int mex1=0;int mex2=0;
+    while(cnt2[mex2]){mex2++;}
+    for(int i=0;i<n;i++){
+        cnt1[arr[i]]++;
+        if(--cnt2[arr[i]]==0&&arr[i]<mex2){
+            mex2=arr[i];
+        }
+        while(mex2&&!cnt2[mex2-1]){
+            mex2--;
+        }
+        while(cnt1[mex1]){mex1++;}
+        if(mex1==mex2){
+            cout<<"2"<<endl;
+            cout<<"1"<<" "<<i+1<<endl;
+            cout<<i+2<<" "<<n<<endl;
+            return;
+        }
+    }
+    cout<<"-1"<<endl;
+    return;
+}
+signed main(){
+    ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+    int t;cin>>t;
+    while(t--){
+        solve();
+    }
+    return 0;
+}
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Solution 1
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Suppose we correctly divided the array into k>2
+ segments — (1,r1),(l2,r2),…,(lk,rk)
+. Then, note that we can merge first two subsegments, as the numbers from 0 to mex−1
+ are encountered in these two segments and the number mex
+ is not encountered in them. Therefore, if there is a division into k>2
+ segments, then there is also for k−1
+ segments.
+
+Therefore, it is sufficient to check whether there is a division of the array into k=2
+ segments, which can be done in O(n)
+ by precalcing MEX
+ on the prefixes and suffixes, then we need to find some i
+ for which MEX(1,i)=MEX(i+1,n)
+.
+---------------------------------------------------------------------------------------
+/* Includes */
+#include <bits/stdc++.h>
+ 
+/* Using libraries */
+using namespace std;
+
+/* Defines */
+#define fast ios_base::sync_with_stdio(false);cin.tie(0);cout.tie(0)
+#define vc vector
+#define pii pair <int, int>
+#define int long long
+ 
+void solve () {
+    int n;
+    cin >> n;
+    vc <int> a(n);
+    vc <int> cnt1(n + 1), cnt2(n + 1);
+    for (int i = 0; i < n; ++i) {
+        cin >> a[i];
+        cnt2[a[i]]++;
+    }
+    int mex1 = 0, mex2 = 0;
+    while (cnt2[mex2])
+        ++mex2;
+    for (int i = 0; i < n; ++i) {
+        cnt1[a[i]]++;
+        if (--cnt2[a[i]] == 0 && mex2 > a[i]) {
+            mex2 = a[i];
+        }
+        while (mex2 && !cnt2[mex2 - 1])
+            --mex2;
+        while (cnt1[mex1])
+            ++mex1;
+        if (mex1 == mex2) {
+            cout << "2\n";
+            cout << 1 << " " << i + 1 << "\n";
+            cout << i + 2 << " " << n << "\n";
+            return;
+        }
+    }
+    cout << "-1\n";
+}
+
+signed main() {
+    fast;
+    int t;
+    cin >> t;
+    while (t--) {
+        solve();
+    }
+    return 0;
+}
